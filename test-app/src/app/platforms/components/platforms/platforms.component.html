@@ -1,0 +1,61 @@
+<h1>Platforms</h1>
+<mat-spinner *ngIf="isLoading$ | async"></mat-spinner>
+
+<ng-container *ngIf="!(isLoading$ | async)">
+  <h3>
+    Users count: {{ userCount$ | async }}
+  </h3>
+  <div class="fields-wrapper">
+    <mat-form-field>
+      <mat-label>Filter</mat-label>
+      <input #input (keyup)="applyFilter($event)" matInput placeholder="Ex. Mia">
+    </mat-form-field>
+    <button (click)="exportToCSV()" [disabled]="!dataSource.filteredData.length" color="accent" mat-raised-button>
+      Export to CSV
+    </button>
+  </div>
+  <div *ngIf="dataSource.data.length > 0; else noPlatforms" class="table-wrapper">
+    <table [dataSource]="dataSource" mat-table matSort>
+      <ng-container matColumnDef="platform_id">
+        <th *matHeaderCellDef mat-header-cell mat-sort-header>ID</th>
+        <td *matCellDef="let row" mat-cell> {{row.platform_id}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th *matHeaderCellDef mat-header-cell mat-sort-header>Name</th>
+        <td *matCellDef="let row" mat-cell> {{row.name}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="last_shared">
+        <th *matHeaderCellDef mat-header-cell mat-sort-header>Last Shared</th>
+        <td *matCellDef="let row" mat-cell> {{row.last_shared | date}} </td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="display_order">
+        <th *matHeaderCellDef mat-header-cell mat-sort-header>Display Order</th>
+        <td *matCellDef="let row" mat-cell> {{row.display_order}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="show_more">
+        <th *matHeaderCellDef mat-header-cell>Show More</th>
+        <td *matCellDef="let row" mat-cell>
+          <a [routerLink]="['/platforms', row.platform_id]" color="primary" mat-raised-button>
+            Details
+          </a>
+        </td>
+      </ng-container>
+
+      <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
+      <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+
+      <tr *matNoDataRow class="mat-row">
+        <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+      </tr>
+    </table>
+  </div>
+</ng-container>
+
+<ng-template #noPlatforms>
+  <h2>No platforms</h2>
+</ng-template>

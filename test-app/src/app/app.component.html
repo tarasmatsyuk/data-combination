@@ -1,0 +1,15 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <a mat-button routerLink="/" class="logo">
+      LOGO
+    </a>
+    <span class="menu-spacer"></span>
+    <div>
+      <a mat-button routerLink="/platforms" routerLinkActive="active">Platforms</a>
+      <a mat-button routerLink="/users" routerLinkActive="active">Users</a>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>
+<main [@routerTransition]="getState(o)">
+  <router-outlet #o="outlet"></router-outlet>
+</main>
