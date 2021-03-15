@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {routerTransition} from './routerTransition';
 import {RouterState} from '@angular/router';
 
@@ -6,7 +6,8 @@ import {RouterState} from '@angular/router';
   selector: 'app-root',
   templateUrl: './app.component.html',
   animations: [ routerTransition ],
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   title = 'test-app';
