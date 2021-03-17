@@ -22,6 +22,8 @@ export class PlatformDetailsComponent implements OnInit, OnDestroy {
   platformShared = PlatformShared;
   displayedColumns: string[] = ['id', 'first_name', 'last_name', 'email', 'gender', 'ip_address', 'username'];
   dataSource: MatTableDataSource<User>;
+  selectedPlatform$ = this.platformsFacadeService.selectedPlatform$;
+  users$ = this.usersFacadeService.users$;
   private unsubscribe$: Subject<void> = new Subject();
   @ViewChild(MatSort) set content(sort: MatSort) {
     if (this.dataSource) {
@@ -39,13 +41,12 @@ export class PlatformDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.route.data.pipe(
+    this.users$.pipe(
       takeUntil(this.unsubscribe$)
-    ).subscribe(({data}) => {
-      this.platform = data.platform;
-      const currentPlatform = this.platformShared[+id];
-      const users = data.users.filter(user => user.profile_shared[currentPlatform]);
-      this.dataSource = new MatTableDataSource(users);
+    ).subscribe((users) => {
+      const currentPlatformId = this.platformShared[+id];
+      const platformUsers = users.filter(user => user.profile_shared[currentPlatformId]);
+      this.dataSource = new MatTableDataSource(platformUsers);
       this.cdr.markForCheck();
     });
   }

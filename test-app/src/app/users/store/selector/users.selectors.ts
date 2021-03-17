@@ -8,6 +8,11 @@ export const users = createSelector(
   (state: UsersState) => state.users
 );
 
+export const selectedUsers = createSelector(
+  getUsersState,
+  (state: UsersState) => state.selectedUser
+);
+
 export const isLoading = createSelector(
   getUsersState,
   (state: UsersState) => state?.loading
@@ -20,6 +25,7 @@ export const isError = createSelector(
 
 export const usersQuery = {
   users,
+  selectedUsers,
   isLoading,
   isError
 };

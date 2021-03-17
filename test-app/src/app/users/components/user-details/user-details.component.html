@@ -1,5 +1,5 @@
 <h1>User Details</h1>
-<mat-accordion class="example-headers-align" multi *ngIf="user">
+<mat-accordion class="example-headers-align" multi *ngIf="selectedUser$ | async as user">
   <mat-expansion-panel hideToggle expanded=true>
     <mat-expansion-panel-header>
       <mat-panel-title>

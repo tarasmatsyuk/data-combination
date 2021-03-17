@@ -1,5 +1,5 @@
 <h1>Platform Details</h1>
-<mat-accordion class="example-headers-align" multi *ngIf="platform">
+<mat-accordion class="example-headers-align" multi *ngIf="selectedPlatform$ | async as platform">
   <mat-expansion-panel hideToggle expanded=true>
     <mat-expansion-panel-header>
       <mat-panel-title>

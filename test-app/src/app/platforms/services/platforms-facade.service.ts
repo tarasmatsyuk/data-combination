@@ -3,6 +3,7 @@ import {Store} from '@ngrx/store';
 import * as PlatformsActions from 'src/app/platforms/store/actions/platforms.actions';
 import { platformsQuery } from 'src/app/platforms/store/selector/platforms.selectors';
 import { UsersStoreState } from 'src/app/users/store/models/user-state.model';
+import { Platform, PlatformResponse } from '../store/models/platform.model';
 import { PlatformsStoreState } from '../store/models/platforms-state.model';
 
 @Injectable({
@@ -25,5 +26,13 @@ export class PlatformsFacadeService {
 
   loadPlatform(id: string): void {
     this.store.dispatch(PlatformsActions.loadPlatform({payload: id}));
+  }
+
+  setPlatforms(paltforms: PlatformResponse): void {
+    this.store.dispatch(PlatformsActions.loadPlatformsSuccess({payload: paltforms}));
+  }
+
+  setPlatform(paltform: Platform): void {
+    this.store.dispatch(PlatformsActions.loadPlatformSuccess({payload: paltform}));
   }
 }

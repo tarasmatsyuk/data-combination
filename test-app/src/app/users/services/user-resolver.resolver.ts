@@ -9,6 +9,8 @@ import {UsersService} from './users.service';
 import {ToastrService} from 'ngx-toastr';
 import {catchError, map} from 'rxjs/operators';
 import { PlatformsService } from 'src/app/platforms/services/platforms.service';
+import {UsersFacadeService} from './user-facade.service';
+import { PlatformsFacadeService } from 'src/app/platforms/services/platforms-facade.service';
 
 @Injectable()
 export class UserResolverResolver implements Resolve<boolean> {
@@ -17,6 +19,8 @@ export class UserResolverResolver implements Resolve<boolean> {
     private usersService: UsersService,
     private toast: ToastrService,
     private router: Router,
+    private platformsFacadeService: PlatformsFacadeService,
+    private usersFacadeService: UsersFacadeService,
   ) {
 
   }
@@ -29,6 +33,8 @@ export class UserResolverResolver implements Resolve<boolean> {
       this.platformsService.getPlatforms()
     ]).pipe(
       map(([user, platforms]) => {
+        this.platformsFacadeService.setPlatforms(platforms);
+        this.usersFacadeService.setUser(user);
         if (user && platforms) {
           return {
             user,

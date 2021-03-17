@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {takeUntil} from 'rxjs/operators';
+import {map, switchMap, takeUntil} from 'rxjs/operators';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
 import {User} from '../../store/models/user.model';
@@ -17,11 +17,13 @@ import {PlatformShared} from '../../store/models/platform-shared.enum';
 })
 export class UserDetailsComponent implements OnInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject();
-  dataSource: MatTableDataSource<User>;
+  dataSource: MatTableDataSource<Platform>;
   platforms: Platform[] = [];
   user: User;
   platformShared = PlatformShared;
   displayedColumns: string[] = ['platform_id', 'last_shared', 'display_order', 'name'];
+  selectedUser$ = this.usersFacadeService.selectedUsers$;
+  platforms$ = this.platformsFacadeService.platforms$;
   @ViewChild(MatSort) set content(sort: MatSort) {
     if (this.dataSource) {
       this.dataSource.sort = sort;
@@ -35,13 +37,16 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.route.data.pipe(
+    this.selectedUser$.pipe(
+      switchMap(user => this.platforms$.pipe(
+          map(platforms => {
+            return {platforms, user};
+          })
+        )),
       takeUntil(this.unsubscribe$)
-    ).subscribe(({data}) => {
-      this.user = data.user;
-      const sharedPlatforms = data.platforms.platforms.filter(platform => {
-        return this.user.profile_shared[this.platformShared[platform.platform_id]];
+    ).subscribe(({platforms, user}) => {
+      const sharedPlatforms = platforms.filter(platform => {
+        return user.profile_shared[this.platformShared[platform.platform_id]];
       });
       this.dataSource = new MatTableDataSource(sharedPlatforms);
       this.cdr.markForCheck();
